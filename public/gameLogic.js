@@ -119,6 +119,9 @@ Game = function () {
     console.log("pj= " + c[0] + "," + c[1]);
   }
 
+  getBoard = function (){
+    return b.now;
+  }
   reset = function (mb, mpA, mpB) {
     mb.reset();
     mpA.reset();
@@ -139,10 +142,13 @@ var g = Game();
 var i = 0;
 
 btic = function (){
-  var string = "";
-  for (var j = 0; j < tmpMoves.length; j++)
-    string += tmpMoves[j] + " ";
-  console.log("[" + string + "] ");
-  if(i<tmpMoves.length)
+// DEBUG
+//  var string = "";
+//  for (var j = 0; j < tmpMoves.length; j++)
+//    string += tmpMoves[j] + " ";
+//  console.log("[" + string + "] ");
+  if(i<tmpMoves.length){
     g.tic(tmpMoves[i++]);
+    draw(g.getBoard());
+  }
 };

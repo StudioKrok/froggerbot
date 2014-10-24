@@ -166,9 +166,9 @@ function updateBoard(){
   }
 }
 
-updateBoard();
-window.setTimeout(renderGame, 2000);
-function renderGame() {
-  updateBoard();
-  window.setTimeout(renderGame, 2000);
-}
+//updateBoard();
+//window.setTimeout(renderGame, 2000);
+//function renderGame() {
+//  updateBoard();
+//  window.setTimeout(renderGame, 2000);
+//}
