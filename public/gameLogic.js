@@ -36,7 +36,7 @@ Board = function () {
     this.now[0][3] += 2;
     this.now[7][3] += 1;
   };
-  this.getPlayer = function (player) {
+  this.getPos = function (player) {
     console.log("Board.getPlayer: " + player);
 
     var r = iO(player);
@@ -68,10 +68,15 @@ Board = function () {
       return [r0, r1];
     }
   }
-  this.setPlayer = function (player, cNew) {
-    var cOld = this.getPlayer(player);
-    now[cOld[0]][cOld[1]] -= player;
-    now[cNew[0]][cNew[1]] += player;
+  
+  /*
+   * delta es el numero del pj o bomba o estorbo
+   */
+  this.setPos = function (delta, cNew) {
+    var cOld = this.getPos(delta);
+    if(cOld[1]!= -1)
+      now[cOld[0]][cOld[1]] -= delta;
+    now[cNew[0]][cNew[1]] += delta;
   };
 
   this.debug = function (){
@@ -101,14 +106,15 @@ Game = function () {
   }
 
   action = function (p, mm) {
-    var c = b.getPlayer(p);
+    console.log(mm);
+    var c = b.getPos(p);
     if (mm == 1) c[1]--;
     if (mm == 4) c[1]++;
     if (mm == 2) c[0]--;
     if (mm == 8) c[0]++;
-    b.setPlayer(p, c);
+    b.setPos(p, c);
     if (mm == 16) 
-     b.setPlayer(p*8, c);
+     b.setPos(p*8, c);
 
     console.log("pj= " + c[0] + "," + c[1]);
   }
@@ -128,12 +134,15 @@ Game = function () {
 
 //Test
 
-var tmpMoves = [2, 2, 16, 4, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2];
-
+var tmpMoves = [2,16, 1, 4, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2];
 var g = Game();
 var i = 0;
 
 btic = function (){
+  var string = "";
+  for (var j = 0; j < tmpMoves.length; j++)
+    string += tmpMoves[j] + " ";
+  console.log("[" + string + "] ");
   if(i<tmpMoves.length)
     g.tic(tmpMoves[i++]);
 };
