@@ -47,6 +47,8 @@ var enemy = (function(){
   var currentPosition = {x:3,y:levelMap.length-1};
   var goalReached = false;
 
+  var goalReached = false;
+
   return{
     getCurrentPosition:function(){
       return currentPosition;
