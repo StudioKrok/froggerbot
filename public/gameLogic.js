@@ -9,7 +9,11 @@ Player = function () {
   this.life;
   this.actions = [];
   this.pos = [0, 3];
-  
+  this.moveStack = [];
+  this.move = function (move){
+    
+  };
+  return this;
 
 };
 
@@ -42,4 +46,21 @@ Board = function () {
     this.now[7][3] += 2;
   }
   return this;
+};
+
+
+game = function (){
+  var myboard = Board();
+  var playerA = Player();
+  var playerB = Player();
+//Pone las fichas de los jugadores
+  reset(myboard,playerA,playerB);
+  playerA.moveStack =[]
+
+  
+  reset = function (b, pA,pB){
+    b.reset();
+    pA.reset();
+    pB.reset();
+  };
 };
