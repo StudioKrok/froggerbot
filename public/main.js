@@ -25,6 +25,7 @@ var boardYPosition = (canvas.height / 2) - ((cellWidth * levelMap.length) / 2);
 var player = (function(){
   var currentPosition = {x:3,y:0};
   var goalReached = false;
+  var currentProgramStack = '';
 
   return{
     getCurrentPosition:function(){
@@ -39,6 +40,12 @@ var player = (function(){
     },
     setGoalReached: function (reached) {
       goalReached = reached;
+    },
+    setCurrentProgrammStack: function(stack){
+      currentProgramStack = stack;
+    },
+    getCurrentProgrammStack: function(){
+      return currentProgramStack;
     }
   }
 })();
@@ -72,13 +79,30 @@ var colors = {
   '2': 'red', //Jugador B
   '4': 'yellow',//Obtacles
   '8': 'magenta',//Minas A
-  '16': 'pink',//Minas B
+  '16': 'pink'//Minas B
 };
 
 keyMapper.setKeyListener(function(key){
-  console.log(key);
-  context.fillStyle = colors[key];
-  context.fillRect(14,14,200,200);
+  if((key & KEYS.ENTER) === key){
+    //@todo Send the program to the server. IT'S TIME TO MOVE.
+    console.log("SEND PROGRAM");
+  }else if((key & KEYS.BACKSPACE) === key){
+    actionsAPI.removeLastCommand();
+  }else{
+    actionsAPI.addCommand(key);
+    player.setCurrentProgrammStack(player.getCurrentProgrammStack() + ' , ' + key);
+  }
+
+  //Draw commands on screen
+
+  /*
+  actionsAPI.init();
+  var nextCommand = actionsAPI.nextCommand();
+  while(nextCommand !== undefined){
+    player.setCurrentProgrammStack(player.getCurrentProgrammStack() + ' , ' + nextCommand);
+  }
+  */
+
 });
 
 function draw(currentBoard){
@@ -87,6 +111,11 @@ function draw(currentBoard){
 
   var cellXPosition = boardXPosition;
   var cellYPosition = boardYPosition;
+
+  //Draw keys
+  context.font = '14px sans-serif';
+  context.fillStyle = 'gray';
+  context.fillText(player.getCurrentProgrammStack(),boardXPosition,boardYPosition - 10);
 
   //Draw board
   currentBoard.forEach(function(boardRow){

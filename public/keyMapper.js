@@ -5,6 +5,7 @@ var KEYS = {
   DOWN:8,
   SPACE:16,
   ENTER:32,
+  BACKSPACE:64
 }
 var keyMapper = (function(){
   var keyMap = 0;
@@ -14,7 +15,8 @@ var keyMapper = (function(){
     '39': KEYS.RIGHT,
     '40': KEYS.DOWN,
     '32': KEYS.SPACE,
-    '13': KEYS.ENTER 
+    '13': KEYS.ENTER,
+    '8': KEYS.BACKSPACE
   }
   var listener = function(){};
 

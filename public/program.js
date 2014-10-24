@@ -1,4 +1,4 @@
-var actions = (function(){
+var actionsAPI = (function(){
   var LIMIT = 16;
   var program = [];
   var currentIndex = 0;
@@ -10,6 +10,11 @@ var actions = (function(){
       }
       program.push(command);
     },
+    removeLastCommand: function(){
+      if(program.length>0){
+        program.pop();
+      }
+    },
     clear: function(){
       program = [];
     },
@@ -18,7 +23,7 @@ var actions = (function(){
     },
     nextCommand: function(){
       if(currentIndex > program.length) return;
-      return program[++currentIndex];
+      return program[currentIndex++];
     }
   }  
 })();
