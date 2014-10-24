@@ -1,3 +1,4 @@
+var socket = io();
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
 var levelMap = [
@@ -195,9 +196,22 @@ function updateBoard(){
   }
 }
 
+<<<<<<< HEAD
 //updateBoard();
 //window.setTimeout(renderGame, 2000);
 //function renderGame() {
 //  updateBoard();
 //  window.setTimeout(renderGame, 2000);
 //}
+=======
+updateBoard();
+window.setTimeout(renderGame, 2000);
+function renderGame() {
+  updateBoard();
+  window.setTimeout(renderGame, 2000);
+}
+socket.on('setSide', function(side){
+  console.log('your side is: ', side);
+});
+socket.emit('setProgram', 'program');
+>>>>>>> wip server protocol
