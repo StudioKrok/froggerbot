@@ -26,6 +26,8 @@ var player = (function(){
     y : initialPosition.y
   };
 
+  var goalReached = false;
+
   return{
     getCurrentPosition:function(){
       return currentPosition;
@@ -33,6 +35,12 @@ var player = (function(){
     setCurrentPosition:function(x,y){
       currentPosition.x = x;
       currentPosition.y = y;
+    },
+    getGoalReached: function () {
+      return goalReached;
+    },
+    setGoalReached: function (reached) {
+      goalReached = reached;
     }
   }
 })();
@@ -80,10 +88,22 @@ function draw(){
   });
 
   //Draw player
-  if(player) drawPlayer(player.getCurrentPosition().x,player.getCurrentPosition().y);
+  if(player){
+    var playerX = player.getCurrentPosition().x;
+    var playerY = player.getCurrentPosition().y;
+    
+    drawPlayer(playerX,playerY);
 
-  //Determine if the player has reached the other side
-
+    if(!player.getGoalReached()) {
+      //Determine if the player has reached the other side
+      if(playerY >= (boardYPosition + cellWidth * levelMap.length)){
+        player.setGoalReached(true);
+      }else{
+        playerY += cellWidth;
+        player.setCurrentPosition(playerX,playerY);
+      }
+    }
+  }
 
 }
 
@@ -102,8 +122,8 @@ function drawPlayer(x,y){
 }
 
 draw();
-window.setTimeout(renderGame, 3000);
+window.setTimeout(renderGame, 1000);
 function renderGame() {
   draw();
-  window.setTimeout(renderGame, 3000);
+  window.setTimeout(renderGame, 1000);
 }
