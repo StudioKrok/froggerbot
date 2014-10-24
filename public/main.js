@@ -91,21 +91,41 @@ function draw(currentBoard){
     boardRow.forEach(function(boardCell){
 
       //Determine what to draw
-
       if(boardCell & 1 || boardCell & 2){
-        //Draw enemy or player
-        context.fillStyle = cellColors[boardCell];
-        context.beginPath();
-        context.arc(cellXPosition + (cellWidth/2), cellYPosition + (cellWidth/2), cellWidth / 3 , 0, Math.PI * 2, false);
-        context.fill();
-        context.stroke();
-        context.closePath();
+        if(boardCell & 1){
+          //Draw player or enemy over a mine
+          //Draw normal cell, obstacle or mine
+          context.fillStyle = cellColors[boardCell - 1];
+          context.fillRect(cellXPosition,cellYPosition,cellWidth,cellWidth);
+
+          context.fillStyle = cellColors[1];
+          context.beginPath();
+          context.arc(cellXPosition + (cellWidth/2), cellYPosition + (cellWidth/2), cellWidth / 3 , 0, Math.PI * 2, false);
+          context.fill();
+          context.stroke();
+          context.closePath();
+        }
+
+        if(boardCell & 2){
+          //Draw player or enemy over a mine
+          //Draw normal cell, obstacle or mine
+          context.fillStyle = cellColors[boardCell - 2];
+          context.fillRect(cellXPosition,cellYPosition,cellWidth,cellWidth);
+
+          context.fillStyle = cellColors[2];
+          context.beginPath();
+          context.arc(cellXPosition + (cellWidth/2), cellYPosition + (cellWidth/2), cellWidth / 3 , 0, Math.PI * 2, false);
+          context.fill();
+          context.stroke();
+          context.closePath();
+        }
       }else{
         //Draw normal cell, obstacle or mine
         context.fillStyle = cellColors[boardCell];
         context.fillRect(cellXPosition,cellYPosition,cellWidth,cellWidth);
       }
 
+      //Draw the borders for the cell
       context.lineWidth = 2;
       context.lineJoin = 'round';
       context.lineCap = 'round';
