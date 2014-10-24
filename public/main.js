@@ -3,29 +3,48 @@ var context = canvas.getContext('2d');
 var levelMap = [
   [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0],
-  [0,0,1,0,0,0,0],
-  [0,0,0,0,1,0,0],
+  [0,0,4,0,0,0,0],
+  [0,0,0,0,4,0,0],
   [0,0,0,0,0,0,0],
-  [0,0,1,0,0,1,0],
+  [0,0,4,0,0,4,0],
   [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0]
 ];
 var cellWidth = 80;
-var cellColors = ['white','yellow','red'];
+var cellColors = {
+  '0':'white',//Normal cell
+  '1':'green',//Player
+  '2':'red',//Enemy
+  '4':'yellow',//Obstacle
+  '8':'magenta',//Player mine
+  '16':'pink'//Enemy mine
+};
 var boardXPosition = (canvas.width / 2) - ((cellWidth * levelMap[0].length) / 2);
 var boardYPosition = (canvas.height / 2) - ((cellWidth * levelMap.length) / 2);
 
 var player = (function(){
-  var initialPosition = {
-    x : boardXPosition + ((cellWidth * levelMap[0].length) / 2),
-    y : boardYPosition - cellWidth / 2
-  };
+  var currentPosition = {x:3,y:0};
+  var goalReached = false;
 
-  var currentPosition = {
-    x : initialPosition.x,
-    y : initialPosition.y
-  };
+  return{
+    getCurrentPosition:function(){
+      return currentPosition;
+    },
+    setCurrentPosition:function(x,y){
+      currentPosition.x = x;
+      currentPosition.y = y;
+    },
+    getGoalReached: function () {
+      return goalReached;
+    },
+    setGoalReached: function (reached) {
+      goalReached = reached;
+    }
+  }
+})();
 
+var enemy = (function(){
+  var currentPosition = {x:3,y:levelMap.length-1};
   var goalReached = false;
 
   return{
@@ -60,7 +79,7 @@ keyMapper.setKeyListener(function(key){
   context.fillRect(14,14,200,200);
 });
 
-function draw(){
+function draw(currentBoard){
   //Clean the canvas for smooth lines
   context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -68,10 +87,24 @@ function draw(){
   var cellYPosition = boardYPosition;
 
   //Draw board
-  levelMap.forEach(function(boardRow){
+  currentBoard.forEach(function(boardRow){
     boardRow.forEach(function(boardCell){
-      context.fillStyle = cellColors[boardCell];
-      context.fillRect(cellXPosition,cellYPosition,cellWidth,cellWidth);
+
+      //Determine what to draw
+
+      if(boardCell & 1 || boardCell & 2){
+        //Draw enemy or player
+        context.fillStyle = cellColors[boardCell];
+        context.beginPath();
+        context.arc(cellXPosition + (cellWidth/2), cellYPosition + (cellWidth/2), cellWidth / 3 , 0, Math.PI * 2, false);
+        context.fill();
+        context.stroke();
+        context.closePath();
+      }else{
+        //Draw normal cell, obstacle or mine
+        context.fillStyle = cellColors[boardCell];
+        context.fillRect(cellXPosition,cellYPosition,cellWidth,cellWidth);
+      }
 
       context.lineWidth = 2;
       context.lineJoin = 'round';
@@ -86,44 +119,34 @@ function draw(){
     cellYPosition += cellWidth;
 
   });
+}
 
-  //Draw player
-  if(player){
-    var playerX = player.getCurrentPosition().x;
-    var playerY = player.getCurrentPosition().y;
-    
-    drawPlayer(playerX,playerY);
+function updateBoard(){
+  levelMap[player.getCurrentPosition().y][player.getCurrentPosition().x] = 1;
+  levelMap[enemy.getCurrentPosition().y][enemy.getCurrentPosition().x] = 2;
 
-    if(!player.getGoalReached()) {
-      //Determine if the player has reached the other side
-      if(playerY >= (boardYPosition + cellWidth * levelMap.length)){
-        player.setGoalReached(true);
-      }else{
-        playerY += cellWidth;
-        player.setCurrentPosition(playerX,playerY);
-      }
-    }
+  if(player.getCurrentPosition().y == levelMap.length - 1) player.setGoalReached(true);
+  if(enemy.getCurrentPosition().y == 0) enemy.setGoalReached(true);
+
+  draw(levelMap);
+
+  //Clean the cells where the player was standed
+  levelMap[player.getCurrentPosition().y][player.getCurrentPosition().x] = 0;
+  levelMap[enemy.getCurrentPosition().y][enemy.getCurrentPosition().x] = 0;
+
+  //Read the x and y positions of player and enemy to put them in the board
+  if(!player.getGoalReached()){
+    player.setCurrentPosition(player.getCurrentPosition().x,player.getCurrentPosition().y+1);
   }
 
+  if(!enemy.getGoalReached()){
+    enemy.setCurrentPosition(enemy.getCurrentPosition().x,enemy.getCurrentPosition().y-1);
+  }
 }
 
-function drawPlayer(x,y){
-  context.lineWidth = 2;
-  context.lineCap = 'round';
-  context.lineJoin = 'round';
-  context.strokeStyle = 'gray';
-  context.fillStyle = 'blue';
-
-  context.beginPath();
-  context.arc(x, y, cellWidth / 3 , 0, Math.PI * 2, false);
-  context.fill();
-  context.stroke();
-  context.closePath();
-}
-
-draw();
-window.setTimeout(renderGame, 1000);
+updateBoard();
+window.setTimeout(renderGame, 2000);
 function renderGame() {
-  draw();
-  window.setTimeout(renderGame, 1000);
+  updateBoard();
+  window.setTimeout(renderGame, 2000);
 }
