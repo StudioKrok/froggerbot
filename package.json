@@ -1,0 +1,30 @@
+{
+  "name": "froggerbot",
+  "version": "0.0.1",
+  "description": "Testing game mechanic related to confront two robots online",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StudioKroko/froggerbot.git"
+  },
+  "keywords": [
+    "game",
+    "demo",
+    "html5",
+    "canvas",
+    "robots",
+    "programming"
+  ],
+  "author": "bomberbot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StudioKroko/froggerbot/issues"
+  },
+  "homepage": "https://github.com/StudioKroko/froggerbot",
+  "dependencies": {
+    "express": "^4.10.0"
+  }
+}
