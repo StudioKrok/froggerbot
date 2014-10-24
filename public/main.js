@@ -65,12 +65,12 @@ var enemy = (function(){
 })();
 
 var colors = {
+  '0': 'white',//Nada
   '1': 'green',//Jugador A
   '2': 'red', //Jugador B
   '4': 'yellow',//Obtacles
-  '8': 'black',
-  '16': 'magenta',//Minas
-  '32': 'white'
+  '8': 'magenta',//Minas A
+  '16': 'pink',//Minas B
 };
 
 keyMapper.setKeyListener(function(key){
