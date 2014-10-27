@@ -147,8 +147,6 @@ btic = function (){
 //  for (var j = 0; j < tmpMoves.length; j++)
 //    string += tmpMoves[j] + " ";
 //  console.log("[" + string + "] ");
-  if(i<tmpMoves.length){
-    g.tic(tmpMoves[i++]);
-    draw(g.getBoard());
-  }
+  g.tic(actionsAPI.nextCommand());
+  draw(g.getBoard());
 };

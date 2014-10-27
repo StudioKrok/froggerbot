@@ -93,7 +93,7 @@ keyMapper.setKeyListener(function(key){
     actionsAPI.addCommand(key);
     player.setCurrentProgrammStack(player.getCurrentProgrammStack() + ' , ' + key);
   }
-
+  draw(g.getBoard());
   //Draw commands on screen
 
   /*
@@ -196,14 +196,6 @@ function updateBoard(){
   }
 }
 
-<<<<<<< HEAD
-//updateBoard();
-//window.setTimeout(renderGame, 2000);
-//function renderGame() {
-//  updateBoard();
-//  window.setTimeout(renderGame, 2000);
-//}
-=======
 updateBoard();
 window.setTimeout(renderGame, 2000);
 function renderGame() {
@@ -214,4 +206,3 @@ socket.on('setSide', function(side){
   console.log('your side is: ', side);
 });
 socket.emit('setProgram', 'program');
->>>>>>> wip server protocol
