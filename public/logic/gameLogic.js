@@ -49,7 +49,7 @@ Board = function () {
       return [r0, r1];
     }
   }
-  
+
   /*
    * delta es el numero del pj o bomba o estorbo
    */
@@ -94,7 +94,7 @@ Game = function () {
     if (mm == 2) c[0]--;
     if (mm == 8) c[0]++;
     b.setPos(p, c);
-    if (mm == 16) 
+    if (mm == 16)
      b.setPos(p*8, c);
 
     console.log("pj= " + c[0] + "," + c[1]);
