@@ -23,56 +23,8 @@ var cellColors = {
 var boardXPosition = (canvas.width / 2) - ((cellWidth * levelMap[0].length) / 2);
 var boardYPosition = (canvas.height / 2) - ((cellWidth * levelMap.length) / 2);
 
-var player = (function(){
-  var currentPosition = {x:3,y:0};
-  var goalReached = false;
-  var currentProgramStack = '';
-
-  return{
-    getCurrentPosition:function(){
-      return currentPosition;
-    },
-    setCurrentPosition:function(x,y){
-      currentPosition.x = x;
-      currentPosition.y = y;
-    },
-    getGoalReached: function () {
-      return goalReached;
-    },
-    setGoalReached: function (reached) {
-      goalReached = reached;
-    },
-    setCurrentProgrammStack: function(stack){
-      currentProgramStack = stack;
-    },
-    getCurrentProgrammStack: function(){
-      return currentProgramStack;
-    }
-  }
-})();
-
-var enemy = (function(){
-  var currentPosition = {x:3,y:levelMap.length-1};
-  var goalReached = false;
-
-  var goalReached = false;
-
-  return{
-    getCurrentPosition:function(){
-      return currentPosition;
-    },
-    setCurrentPosition:function(x,y){
-      currentPosition.x = x;
-      currentPosition.y = y;
-    },
-    getGoalReached: function () {
-      return goalReached;
-    },
-    setGoalReached: function (reached) {
-      goalReached = reached;
-    }
-  }
-})();
+var player = Player();
+var enemy = Player(true);
 
 var colors = {
   '0': 'white',//Nada

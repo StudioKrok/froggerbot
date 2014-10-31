@@ -25,5 +25,5 @@ var actionsAPI = (function(){
       if(currentIndex > program.length) return;
       return program[currentIndex++];
     }
-  }  
+  }
 })();

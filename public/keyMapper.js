@@ -1,22 +1,22 @@
-var KEYS = {
+var COMMANDS = {
   LEFT:1,
   UP:2,
   RIGHT:4,
   DOWN:8,
-  SPACE:16,
-  ENTER:32,
-  BACKSPACE:64
+  SPACE:16,//Mina
+  ENTER:32,//Confirmar
+  BACKSPACE:64//Borrar el ultimo
 }
 var keyMapper = (function(){
   var keyMap = 0;
   var keys = {
-    '37': KEYS.LEFT,
-    '38': KEYS.UP,
-    '39': KEYS.RIGHT,
-    '40': KEYS.DOWN,
-    '32': KEYS.SPACE,
-    '13': KEYS.ENTER,
-    '8': KEYS.BACKSPACE
+    '37': COMMANDS.LEFT,
+    '38': COMMANDS.UP,
+    '39': COMMANDS.RIGHT,
+    '40': COMMANDS.DOWN,
+    '32': COMMANDS.SPACE,
+    '13': COMMANDS.ENTER,
+    '8': COMMANDS.BACKSPACE
   }
   var listener = function(){};
 
@@ -38,5 +38,5 @@ var keyMapper = (function(){
     setKeyListener: function(newListener){
       listener = newListener;
     }
-  }  
+  }
 })();

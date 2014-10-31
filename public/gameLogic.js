@@ -1,22 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//Player
-Player = function () {
-  this.number = 1;//1=A o 2=B
-  this.life;
-  this.actions = [];
-  //this.pos = [0, 3];//@Deprecated Board guarda la pos de los players
-  this.move = function (move) {
-
-  };
-  return this;
-
-};
-
 Board = function () {
   this.now = [];
   //STATIC
