@@ -13,8 +13,8 @@ var levelMap = [
 var cellWidth = 80;
 var cellColors = {
   '0':'white',//Normal cell
-  '1':'green',//Player
-  '2':'red',//Enemy
+  '1':'green',//PlayerA
+  '2':'red',//PlayerB
   '4':'yellow',//Obstacle
   '8':'magenta',//Player mine
   '16':'pink'//Enemy mine

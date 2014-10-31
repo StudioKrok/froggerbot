@@ -5,14 +5,30 @@ var Player = function(socket){
   var program = [];
   var ready = false;
   var levelMap = [];
+  var trans = {
+    "4":1,
+    "1":4,
+    "8":2,
+    "2":8
+  };
+  var currentPosition = {x:0,y:0};
+  var life = 3;
+  var currentIndex = 0;
 
   return {
     disconnect: function(){
 
     },
-    setProgram: function(program){
+    setProgram: function(clientProgram){
+      if(side === 'B'){
+        clientProgram.forEach(function(element,index){
+          clientProgram[index] = trans[element];
+        });
+      }
+      program = clientProgram;
       console.log(program);
       ready = true;
+      currentIndex = 0;
     },
     playAgain: function(){
 
@@ -25,6 +41,19 @@ var Player = function(socket){
     setLevelMap: function(myMap){
       levelMap = myMap;
       socket.emit('setMap', levelMap);
+    },
+    isReady: function(){
+      return ready;
+    },
+    getNextMovement: function(){
+      if(currentIndex > program.length) return;
+      return program[currentIndex++];
+    },
+    getCurrentPosition: function(){
+      return currentPosition;
+    },
+    getSide: function(){
+      return side;
     }
   }
 };

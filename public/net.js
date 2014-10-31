@@ -14,4 +14,3 @@ socket.on('setMap',function(map){
 function sendProgram(){
   socket.emit('setProgram',actionsAPI.getProgram());
 }
-socket.emit('setProgram', 'program');

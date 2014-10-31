@@ -50,8 +50,92 @@ exports.Game = function(){
     turn = 0;
   }
 
+  function moveUp(player){
+    var position = player.getCurrentPosition();
+    if(--position.y<0){
+      position.y=0;
+      if(player.getSide()==='A'){
+        console.log('Player A wins!');
+      }
+      return;
+    }
+    var cellValue = levelMap[position.y][position.x];
+    if(cellValue==4){
+      console.log('Player can\'t move');
+      position.y++;
+      return;
+    }
+  };
+
+  function moveDown(player){
+    var position = player.getCurrentPosition();
+    if(++position.y>=levelMap.length){
+      position.y=levelMap.length-1;
+      if(player.getSide()==='B'){
+        console.log('Player B wins!');
+      }
+      return;
+    }
+    var cellValue = levelMap[position.y][position.x];
+    if(cellValue==4){
+      console.log('Player can\'t move');
+      position.y--;
+      return;
+    }
+  };
+
+  function moveLeft(player){
+    var position = player.getCurrentPosition();
+    if(--position.x<0){
+      position.x=0;
+      return;
+    }
+    var cellValue = levelMap[position.y][position.x];
+    if(cellValue==4){
+      console.log('Player can\'t move');
+      position.x++;
+      return;
+    }
+  };
+
+  function moveRight(player){
+    var position = player.getCurrentPosition();
+    if(++position.x>=levelMap[0].length){
+      position.x=levelMap[0].length-1;
+      return;
+    }
+    var cellValue = levelMap[position.y][position.x];
+    if(cellValue==4){
+      console.log('Player can\'t move');
+      position.x--;
+      return;
+    }
+  };
+
+  var movements = {
+    '1': moveLeft,
+    '2': moveUp,
+    '4': moveRight,
+    '8': moveDown
+  };
+
   function nextTurn(){
     console.log('next turn', turn++);
+    
+    var playerANextMov = playerA.getNextMovement();
+    var position = playerA.getCurrentPosition();
+    levelMap[position.y][position.x] = 0;
+    movements[playerANextMov](playerA);
+    levelMap[position.y][position.x] = '1';
+
+    var playerBNextMov = playerB.getNextMovement();
+    var position = playerA.getCurrentPosition();
+    levelMap[position.y][position.x] = 0;
+    movements[playerBNextMov](playerB);
+    levelMap[position.y][position.x] = '2';
+
+    playerA.setLevelMap(levelMap);
+    playerB.setLevelMap(invertMap(levelMap));
   }
 
   gameActions = {};
@@ -59,7 +143,8 @@ exports.Game = function(){
     //I don't know what to do with myself
   };
   gameActions[GAME_STATE.WAITING] = function(){
-    if(playerA.ready && playerB.ready){
+    if(playerA.isReady() && playerB.isReady()){
+      console.log("THE BATTLE STARTS");
       init();
     }
   };
