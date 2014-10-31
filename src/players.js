@@ -49,11 +49,15 @@ var Player = function(socket){
       if(currentIndex > program.length) return;
       return program[currentIndex++];
     },
-    getCurrentPosition: function(){
+    getPosition: function(){
       return currentPosition;
     },
     getSide: function(){
       return side;
+    },
+    setPosition: function(x,y){
+      currentPosition.x = x;
+      currentPosition.y = y;
     }
   }
 };

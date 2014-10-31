@@ -13,7 +13,7 @@ module.exports = (function(){
     };
     setTimeout(function(){
       update();
-    }, 1000);
+    }, 500);
   };
   update();
 

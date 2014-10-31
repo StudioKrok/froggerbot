@@ -12,14 +12,14 @@ exports.Game = function(){
 
   //Load the map for the game. This can be used for load random maps
   var levelMap = [
-    [0,0,0,0,0,0,0],
+    [0,0,0,2,0,0,0],
     [0,0,0,0,0,0,0],
     [0,0,4,0,0,0,0],
     [0,0,0,0,4,0,0],
     [0,0,0,4,4,4,0],
     [0,0,4,0,0,4,0],
     [0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0]
+    [0,0,0,1,0,0,0]
   ];
   function invertMap(map){
     var cols = map[0].length-1;
@@ -51,7 +51,7 @@ exports.Game = function(){
   }
 
   function moveUp(player){
-    var position = player.getCurrentPosition();
+    var position = player.getPosition();
     if(--position.y<0){
       position.y=0;
       if(player.getSide()==='A'){
@@ -68,7 +68,7 @@ exports.Game = function(){
   };
 
   function moveDown(player){
-    var position = player.getCurrentPosition();
+    var position = player.getPosition();
     if(++position.y>=levelMap.length){
       position.y=levelMap.length-1;
       if(player.getSide()==='B'){
@@ -85,7 +85,7 @@ exports.Game = function(){
   };
 
   function moveLeft(player){
-    var position = player.getCurrentPosition();
+    var position = player.getPosition();
     if(--position.x<0){
       position.x=0;
       return;
@@ -99,7 +99,7 @@ exports.Game = function(){
   };
 
   function moveRight(player){
-    var position = player.getCurrentPosition();
+    var position = player.getPosition();
     if(++position.x>=levelMap[0].length){
       position.x=levelMap[0].length-1;
       return;
@@ -123,16 +123,20 @@ exports.Game = function(){
     console.log('next turn', turn++);
     
     var playerANextMov = playerA.getNextMovement();
-    var position = playerA.getCurrentPosition();
-    levelMap[position.y][position.x] = 0;
-    movements[playerANextMov](playerA);
-    levelMap[position.y][position.x] = '1';
+    if(playerANextMov){
+      var position = playerA.getPosition();
+      levelMap[position.y][position.x] = 0;
+      movements[playerANextMov](playerA);
+      levelMap[position.y][position.x] = '1';
+    }
 
     var playerBNextMov = playerB.getNextMovement();
-    var position = playerA.getCurrentPosition();
-    levelMap[position.y][position.x] = 0;
-    movements[playerBNextMov](playerB);
-    levelMap[position.y][position.x] = '2';
+    if(playerBNextMov){
+      var position = playerB.getPosition();
+      levelMap[position.y][position.x] = 0;
+      movements[playerBNextMov](playerB);
+      levelMap[position.y][position.x] = '2';
+    }
 
     playerA.setLevelMap(levelMap);
     playerB.setLevelMap(invertMap(levelMap));
@@ -160,11 +164,14 @@ exports.Game = function(){
         playerA = player;
         player.setSide('A');
         player.setLevelMap(levelMap);
+        player.setPosition(3,7);
         return;
       }
       playerB = player;
       player.setSide('B');
       player.setLevelMap(invertMap(levelMap));
+      player.setPosition(3,0);
+
       state = GAME_STATE.WAITING;
     },
     getState: function(){
