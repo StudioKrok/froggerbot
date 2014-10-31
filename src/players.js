@@ -9,7 +9,8 @@ var Player = function(socket){
     "4":1,
     "1":4,
     "8":2,
-    "2":8
+    "2":8,
+    "16":16
   };
   var currentPosition = {x:0,y:0};
   var life = 3;
@@ -58,6 +59,12 @@ var Player = function(socket){
     setPosition: function(x,y){
       currentPosition.x = x;
       currentPosition.y = y;
+    },
+    die: function(side){
+      program = [];
+      ready = false;
+      currentPosition.x=3;
+      currentPosition.y = side==='A'?7:0;
     }
   }
 };

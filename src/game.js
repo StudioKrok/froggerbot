@@ -112,32 +112,68 @@ exports.Game = function(){
     }
   };
 
+  function putMine(player){
+    var position = player.getPosition();
+    if(player.getSide() === 'A'){
+      levelMap[position.y][position.x] += 8;
+      return;
+    }
+    levelMap[position.y][position.x] += 16;
+  };
+
+  function validateMineCollision(player){
+    var position = player.getPosition();
+    var cell = levelMap[position.y][position.x];
+    if(player.getSide()==='A' && (cell&16)==16){
+      levelMap[position.y][position.x]=0;
+      levelMap[7][3]=1;
+      player.die();
+      state = GAME_STATE.WAITING;
+      return true;
+    }
+    if(player.getSide()==='B' && (cell&8)==8){
+      levelMap[position.y][position.x]=0;
+      levelMap[0][3]=2;
+      player.die();
+      state = GAME_STATE.WAITING;
+      return true;
+    }
+    
+    return false;
+  };
+
   var movements = {
     '1': moveLeft,
     '2': moveUp,
     '4': moveRight,
-    '8': moveDown
+    '8': moveDown,
+    '16':putMine
   };
 
   function nextTurn(){
-    console.log('next turn', turn++);
+//    console.log('next turn', turn++);
+
+    if(validateMineCollision(playerA)||validateMineCollision(playerB)){
+      playerA.setLevelMap(levelMap);
+      playerB.setLevelMap(invertMap(levelMap));
+      return;
+    }
     
     var playerANextMov = playerA.getNextMovement();
     if(playerANextMov){
       var position = playerA.getPosition();
-      levelMap[position.y][position.x] = 0;
+      levelMap[position.y][position.x] -= 1;
       movements[playerANextMov](playerA);
-      levelMap[position.y][position.x] = '1';
+      levelMap[position.y][position.x] += 1;
     }
 
     var playerBNextMov = playerB.getNextMovement();
     if(playerBNextMov){
       var position = playerB.getPosition();
-      levelMap[position.y][position.x] = 0;
+      levelMap[position.y][position.x] -= 2;
       movements[playerBNextMov](playerB);
-      levelMap[position.y][position.x] = '2';
+      levelMap[position.y][position.x] += 2;
     }
-
     playerA.setLevelMap(levelMap);
     playerB.setLevelMap(invertMap(levelMap));
   }
