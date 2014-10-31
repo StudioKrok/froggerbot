@@ -4,6 +4,7 @@ var Player = function(socket){
   var side = '';
   var program = [];
   var ready = false;
+  var levelMap = [];
 
   return {
     disconnect: function(){
@@ -20,6 +21,10 @@ var Player = function(socket){
       side = newSide;
       socket.emit('setSide', side);
       console.log('setSide', side);
+    },
+    setLevelMap: function(myMap){
+      levelMap = myMap;
+      socket.emit('setMap', levelMap);
     }
   }
 };

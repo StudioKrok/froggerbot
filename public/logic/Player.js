@@ -4,7 +4,7 @@ var Player = function(isEnemy){
     y:((isEnemy) ? levelMap.length-1 : 0)
   };
   var goalReached = false;
-  var currentProgramStack = '';
+  var currentProgramStack = [];
 
   //1=Own A o 2=Enemy B
   var number = ((isEnemy) ? 2 : 1);
@@ -25,10 +25,10 @@ var Player = function(isEnemy){
     setGoalReached: function (reached) {
       goalReached = reached;
     },
-    setCurrentProgrammStack: function(stack){
+    setCurrentProgramStack: function(stack){
       currentProgramStack = stack;
     },
-    getCurrentProgrammStack: function(){
+    getCurrentProgramStack: function(){
       return currentProgramStack;
     }
   }

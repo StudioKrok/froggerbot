@@ -1,13 +1,12 @@
-var socket = io();
 var canvas = document.getElementById('myCanvas');
 var context = canvas.getContext('2d');
 var levelMap = [
   [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0],
-  [0,0,4,0,0,0,0],
-  [0,0,0,0,4,0,0],
   [0,0,0,0,0,0,0],
-  [0,0,4,0,0,4,0],
+  [0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0]
 ];
@@ -36,16 +35,17 @@ var colors = {
 };
 
 keyMapper.setKeyListener(function(key){
-  if((key & KEYS.ENTER) === key){
+  if((key & COMMANDS.ENTER) === key){
     //@todo Send the program to the server. IT'S TIME TO MOVE.
     console.log("SEND PROGRAM");
-  }else if((key & KEYS.BACKSPACE) === key){
+    sendProgram();
+  }else if((key & COMMANDS.BACKSPACE) === key){
     actionsAPI.removeLastCommand();
+    player.setCurrentProgramStack(actionsAPI.getProgram());
   }else{
     actionsAPI.addCommand(key);
-    player.setCurrentProgrammStack(player.getCurrentProgrammStack() + ' , ' + key);
+    player.setCurrentProgramStack(actionsAPI.getProgram());
   }
-  draw(g.getBoard());
   //Draw commands on screen
 
   /*
@@ -65,10 +65,10 @@ function draw(currentBoard){
   var cellXPosition = boardXPosition;
   var cellYPosition = boardYPosition;
 
-  //Draw keys
+  //Draw COMMANDS
   context.font = '14px sans-serif';
   context.fillStyle = 'gray';
-  context.fillText(player.getCurrentProgrammStack(),boardXPosition,boardYPosition - 10);
+  context.fillText(actionsAPI.getProgramSymbols().join('  '), boardXPosition,boardYPosition - 10);
 
   //Draw board
   currentBoard.forEach(function(boardRow){
@@ -125,7 +125,13 @@ function draw(currentBoard){
   });
 }
 
+/*
+This function move the players in the level map matrix and then call the render function.
+*/
 function updateBoard(){
+  draw(levelMap);
+
+  /*
   levelMap[player.getCurrentPosition().y][player.getCurrentPosition().x] = 1;
   levelMap[enemy.getCurrentPosition().y][enemy.getCurrentPosition().x] = 2;
 
@@ -146,15 +152,11 @@ function updateBoard(){
   if(!enemy.getGoalReached()){
     enemy.setCurrentPosition(enemy.getCurrentPosition().x,enemy.getCurrentPosition().y-1);
   }
+  */
 }
 
-updateBoard();
-window.setTimeout(renderGame, 2000);
-function renderGame() {
+renderGame = function() {
   updateBoard();
-  window.setTimeout(renderGame, 2000);
+  window.setTimeout(renderGame, 1000 / 60);
 }
-socket.on('setSide', function(side){
-  console.log('your side is: ', side);
-});
-socket.emit('setProgram', 'program');
+renderGame();

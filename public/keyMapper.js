@@ -7,6 +7,13 @@ var COMMANDS = {
   ENTER:32,//Confirmar
   BACKSPACE:64//Borrar el ultimo
 }
+var KEY_SYMBOLS = {
+  '1':"←",
+  '2':"↑",
+  '4':"→",
+  '8':"↓",
+  '16':"*"
+}
 var keyMapper = (function(){
   var keyMap = 0;
   var keys = {
