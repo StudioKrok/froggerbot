@@ -11,7 +11,8 @@ var games = require('./src/games');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
-  res.sendFile('index.html');
+  console.log("esa cosa");
+  res.sendFile('./game/index.html');
 });
 
 
