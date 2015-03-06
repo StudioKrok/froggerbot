@@ -4,8 +4,9 @@ FroggerBot.Game = function(game) {
 
 }
 
-FroggerBot.Game.prototype.preloader = function() {
-
+FroggerBot.Game.prototype.preload = function() {
+  this.load.spritesheet('controls', 'assets/img/controls.png', 50, 50);
+  this.load.spritesheet('crud', 'assets/img/crud.png', 50, 50);
 }
 
 FroggerBot.Game.prototype.create = function() {
