@@ -21,6 +21,9 @@ exports.Game = function(){
     [0,0,0,0,0,0,0],
     [0,0,0,1,0,0,0]
   ];
+
+  var maze = null;
+
   function invertMap(map){
     var cols = map[0].length-1;
     var rows = map.length-1;
@@ -190,6 +193,52 @@ exports.Game = function(){
   };
   gameActions[GAME_STATE.PLAYING] = nextTurn;
 
+
+  function _createLevel(width, height){
+    var level = [];
+    for (var i = 0; i < height; i++) {
+      level.push([]);
+      for (var j = 0; j < width; j++) {
+        level[i].push('.');
+      };
+    };
+    return level;
+  };
+
+  function mapToMaze(map){
+    var mazeWidth = map[0].length;
+    var mazeHeight = map.length;
+    maze = [];
+
+    //Read the map
+    for(var i=0; i<map.length; i++){
+      for(var j=0; j<map[i].length; j++){
+        if(map[i][j] >= 0 && map[i][j] <= 2){
+          if(maze.length === 0){
+            maze.push(_createLevel(mazeWidth, mazeHeight));
+          }
+
+          maze[0][i][j] = '' + 0;
+        }else if(map[i][j] > 2){
+          if(maze.length === 0){
+            maze.push(_createLevel(mazeWidth, mazeHeight));
+          }
+
+          maze[0][i][j] = '' + 0;
+
+          if(maze.length === 1){
+            maze.push(_createLevel(mazeWidth, mazeHeight));
+          }
+
+          maze[1][i][j] = '' + map[i][j];
+        }
+      }
+    }
+
+    return maze;
+
+  }
+
   return {
     addPlayer: function(player){
       if(state != GAME_STATE.CREATED) return;
@@ -199,13 +248,14 @@ exports.Game = function(){
       if(!playerA){
         playerA = player;
         player.setSide('A');
-        player.setLevelMap(levelMap);
+        player.setLevelMap(mapToMaze(levelMap));
         player.setPosition(3,7);
         return;
       }
+
       playerB = player;
       player.setSide('B');
-      player.setLevelMap(invertMap(levelMap));
+      player.setLevelMap(mapToMaze(invertMap(levelMap)));
       player.setPosition(3,0);
 
       state = GAME_STATE.WAITING;
