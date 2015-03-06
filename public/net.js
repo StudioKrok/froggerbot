@@ -7,8 +7,10 @@ socket.on('setSide', function(side){
 
 socket.on('setMap',function(map){
   levelMap = map;
+});
 
-  console.log(levelMap);
+socket.on('onGame',function(gameId){
+  console.log('joined to game: ' + gameId);
 });
 
 function sendProgram(){

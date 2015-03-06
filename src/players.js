@@ -1,16 +1,17 @@
-var Player = function(socket){
+var Player = function(gameManager, socket){
   var socket = socket;
   var id = socket.id;
   var side = '';
   var program = [];
   var ready = false;
   var levelMap = [];
+  var gameId = ''; 
   var trans = {
-    "4":1,
-    "1":4,
-    "8":2,
-    "2":8,
-    "16":16
+    "4": 1,
+    "1": 4,
+    "8": 2,
+    "2": 8,
+    "16": 16
   };
   var currentPosition = {x:0,y:0};
   var life = 3;
@@ -18,7 +19,9 @@ var Player = function(socket){
 
   return {
     disconnect: function(){
-
+      console.log('player ', id, ' disconnected.');
+      console.log('game ', gameId, ' disconnected.');
+      gameManager.playerDisconnected(gameId, this.id);
     },
     setProgram: function(clientProgram){
       if(side === 'B'){
@@ -28,10 +31,12 @@ var Player = function(socket){
       }
       program = clientProgram;
       console.log(program);
+      console.log('gameid', gameId);
       ready = true;
       currentIndex = 0;
     },
     playAgain: function(){
+      console.log('player ', id, ' wants to play again.');
 
     },
     setSide: function(newSide){
@@ -75,6 +80,13 @@ var Player = function(socket){
       ready = false;
       currentPosition.x=3;
       currentPosition.y = side==='A'?7:0;
+    },
+    setGameId: function(gameUid){
+      gameId = gameUid;
+      socket.emit('onGame', gameId);
+    },
+    getId: function(){
+      return id;
     }
   }
 };
@@ -88,8 +100,8 @@ module.exports = (function(){
   };
 
   return {
-    connectNewPlayer: function(socket){
-      var player = new Player(socket);
+    connectNewPlayer: function(games, socket){
+      var player = new Player(games, socket);
       players.push(player);
       return player;
     },

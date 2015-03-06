@@ -17,7 +17,7 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
-  var player = players.connectNewPlayer(socket);
+  var player = players.connectNewPlayer(games, socket);
 
   games.joinPlayer(player);
 

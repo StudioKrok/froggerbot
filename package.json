@@ -26,6 +26,7 @@
   "homepage": "https://github.com/StudioKroko/froggerbot",
   "dependencies": {
     "express": "^4.10.0",
+    "simple-uuid": "0.0.1",
     "socket.io": "^1.1.0"
   }
 }

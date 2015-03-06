@@ -1,15 +1,16 @@
 var GAME_STATE = {
-  CREATED: 0,
-  WAITING: 1,
-  STARTED: 2,
-  PLAYING: 3,
-  ENDED: 4
+  CREATED: 'c',
+  WAITING: 'w',
+  STARTED: 's',
+  PLAYING: 'p',
+  ENDED: 'e'
 };
 
 exports.GAME_STATE = GAME_STATE;
 
-exports.Game = function(){
+exports.Game = function(uid){
 
+  var id = uid;
   //Load the map for the game. This can be used for load random maps
   var levelMap = [
     [0,0,0,2,0,0,0],
@@ -44,7 +45,6 @@ exports.Game = function(){
 
   var state = GAME_STATE.CREATED;
   var self = this;
-  var id = (new Date()).getTime();
 
   var turn = 0;
 
@@ -153,6 +153,19 @@ exports.Game = function(){
     '16':putMine
   };
 
+  function reset(){
+    levelMap = [
+      [0,0,0,2,0,0,0],
+      [0,0,0,0,0,0,0],
+      [0,0,4,0,0,0,0],
+      [0,0,0,0,4,0,0],
+      [0,0,0,4,4,4,0],
+      [0,0,4,0,0,4,0],
+      [0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0]
+    ];
+    console.log('reset');
+  };
   function nextTurn(){
 //    console.log('next turn', turn++);
 
@@ -181,7 +194,7 @@ exports.Game = function(){
     playerB.setLevelMap(invertMap(levelMap));
   }
 
-  gameActions = {};
+  var gameActions = {};
   gameActions[GAME_STATE.CREATED] = function(){
     //I don't know what to do with myself
   };
@@ -241,7 +254,7 @@ exports.Game = function(){
 
   return {
     addPlayer: function(player){
-      if(state != GAME_STATE.CREATED) return;
+      if(state != GAME_STATE.CREATED) return false;
   
       player.game = self;
   
@@ -250,7 +263,7 @@ exports.Game = function(){
         player.setLevelMap(mapToMaze(levelMap));
         player.setSide('A');
         player.setPosition(3,7);
-        return;
+        return true;
       }
 
       playerB = player;
@@ -262,12 +275,36 @@ exports.Game = function(){
       playerB.setEnemyPositionAndSide(3, 7, 'A');
 
       state = GAME_STATE.WAITING;
+      return true;
+    },
+    removePlayer: function(playerId){
+      if(playerA.getId() === playerId){
+        console.log('player <A> fue el que se fue');
+        playerA = playerB;
+      }else if(!!playerB && playerB.getId() !== playerId){
+        console.log('player a ni b fue el que se fue');
+        return;
+      }
+      console.log('player >B< fue el que se fue');
+      playerB = undefined;
+      reset();
+      if(playerA){
+        playerA.setSide('A');
+        playerA.setLevelMap(levelMap);
+        playerA.setPosition(3,7);
+      }
+      state = GAME_STATE.CREATED;
+      return playerA;
     },
     getState: function(){
       return state;
     },
     update: function(){
+      console.log(id, state, playerA.getId(), playerB&&playerB.getId());
       gameActions[state]();
+    },
+    getId: function(){
+      return id;
     }
   }
 };
