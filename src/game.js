@@ -247,16 +247,19 @@ exports.Game = function(){
   
       if(!playerA){
         playerA = player;
-        player.setSide('A');
         player.setLevelMap(mapToMaze(levelMap));
+        player.setSide('A');
         player.setPosition(3,7);
         return;
       }
 
       playerB = player;
-      player.setSide('B');
       player.setLevelMap(mapToMaze(invertMap(levelMap)));
+      player.setSide('B');
       player.setPosition(3,0);
+
+      playerA.setEnemyPositionAndSide(3, 0, 'B');
+      playerB.setEnemyPositionAndSide(3, 7, 'A');
 
       state = GAME_STATE.WAITING;
     },

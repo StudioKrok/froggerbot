@@ -59,6 +59,16 @@ var Player = function(socket){
     setPosition: function(x,y){
       currentPosition.x = x;
       currentPosition.y = y;
+      socket.emit('setPosition', currentPosition);
+    },
+    setEnemyPositionAndSide: function(x, y, side){
+      var enemyPositionAndSide = {
+        x: x,
+        y: y,
+        side: side
+      };
+
+      socket.emit('setEnemy', enemyPositionAndSide);
     },
     die: function(side){
       program = [];
