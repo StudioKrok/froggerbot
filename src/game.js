@@ -15,10 +15,10 @@ exports.Game = function(uid){
   var levelMap = [
     [0,0,0,2,0,0,0],
     [0,0,0,0,0,0,0],
-    [0,0,4,0,0,0,0],
-    [0,0,0,0,4,0,0],
-    [0,0,0,4,4,4,0],
-    [0,0,4,0,0,4,0],
+    [0,4,4,0,0,0,4],
+    [0,0,4,0,4,0,0],
+    [4,0,0,0,4,4,0],
+    [0,0,0,0,0,4,0],
     [0,0,0,0,0,0,0],
     [0,0,0,1,0,0,0]
   ];
@@ -155,14 +155,14 @@ exports.Game = function(uid){
 
   function reset(){
     levelMap = [
-      [0,0,0,2,0,0,0],
-      [0,0,0,0,0,0,0],
-      [0,0,4,0,0,0,0],
-      [0,0,0,0,4,0,0],
-      [0,0,0,4,4,4,0],
-      [0,0,4,0,0,4,0],
-      [0,0,0,0,0,0,0],
-      [0,0,0,1,0,0,0]
+    [0,0,0,2,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,4,4,0,0,0,4],
+    [0,0,4,0,4,0,0],
+    [4,0,0,0,4,4,0],
+    [0,0,0,0,0,4,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,1,0,0,0]
     ];
     console.log('reset');
   };
@@ -206,52 +206,6 @@ exports.Game = function(uid){
   };
   gameActions[GAME_STATE.PLAYING] = nextTurn;
 
-
-  function _createLevel(width, height){
-    var level = [];
-    for (var i = 0; i < height; i++) {
-      level.push([]);
-      for (var j = 0; j < width; j++) {
-        level[i].push('.');
-      };
-    };
-    return level;
-  };
-
-  function mapToMaze(map){
-    var mazeWidth = map[0].length;
-    var mazeHeight = map.length;
-    maze = [];
-
-    //Read the map
-    for(var i=0; i<map.length; i++){
-      for(var j=0; j<map[i].length; j++){
-        if(map[i][j] >= 0 && map[i][j] <= 2){
-          if(maze.length === 0){
-            maze.push(_createLevel(mazeWidth, mazeHeight));
-          }
-
-          maze[0][i][j] = '' + 0;
-        }else if(map[i][j] > 2){
-          if(maze.length === 0){
-            maze.push(_createLevel(mazeWidth, mazeHeight));
-          }
-
-          maze[0][i][j] = '' + 0;
-
-          if(maze.length === 1){
-            maze.push(_createLevel(mazeWidth, mazeHeight));
-          }
-
-          maze[1][i][j] = '' + map[i][j];
-        }
-      }
-    }
-
-    return maze;
-
-  }
-
   return {
     addPlayer: function(player){
       if(state != GAME_STATE.CREATED) return false;
@@ -260,15 +214,16 @@ exports.Game = function(uid){
   
       if(!playerA){
         playerA = player;
-        player.setLevelMap(mapToMaze(levelMap));
         player.setSide('A');
+        player.setLevelMap(levelMap);
         player.setPosition(3,7);
         return true;
       }
 
       playerB = player;
-      player.setLevelMap(mapToMaze(invertMap(levelMap)));
       player.setSide('B');
+      player.setLevelMap(invertMap(levelMap));
+      //log(invertMap(levelMap));
       player.setPosition(3,0);
 
       playerA.setEnemyPositionAndSide(3, 0, 'B');
@@ -300,7 +255,7 @@ exports.Game = function(uid){
       return state;
     },
     update: function(){
-      console.log(id, state, playerA.getId(), playerB&&playerB.getId());
+      //console.log(id, state, playerA.getId(), playerB&&playerB.getId());
       gameActions[state]();
     },
     getId: function(){

@@ -3,23 +3,23 @@ FroggerBot.Configuration = {}
 
 FroggerBot.Configuration.player = {
   left: function() {
-
+    return '';
   },
 
   right: function() {
-
+    return '';
   },
 
   up: function() {
-
+    return '';
   },
 
   down: function() {
-
+    return '';
   },
 
   bomb: function() {
-
+    return '';
   }
 }
 
@@ -60,13 +60,34 @@ FroggerBot.Configuration.positronicConfig =  {
         frame: 3
       }
     },
+    "deleteLast":{
+      identifier:"deleteLast",
+      executerAction:"console.log();",
+      commandBtn: {
+        key: 'actions',
+        frame: 10,
+        extraProperties: {
+          lockDrag: true,
+          preventCopy: true,
+          onClick: function(){
+            this.editor.removeLastCommandOnActivePanel();
+          }
+        }
+      }
+    },
     "hammer":{
       identifier:"16",
-      executerAction:"player.useHammer();",
+      executerAction:"player.bomb();",
       commandBtn: {
         key: 'actions',
         frame: 9
       }
-    }, 
+    },
+    "main":{
+      identifier:"M"
+    },
+    "close":{
+      identifier:"}"
+    }
   }
 }

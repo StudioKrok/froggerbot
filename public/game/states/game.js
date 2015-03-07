@@ -1,7 +1,55 @@
 var FroggerBot = FroggerBot || {};
 
+function _createLevel(width, height){
+  var level = [];
+  for (var i = 0; i < height; i++) {
+    level.push([]);
+    for (var j = 0; j < width; j++) {
+      level[i].push('.');
+    };
+  };
+  return level;
+};
+
+function mapToMaze(map){
+  var mazeWidth = map[0].length;
+  var mazeHeight = map.length;
+  maze = [];
+
+  //Read the map
+  for(var i=0; i<map.length; i++){
+    for(var j=0; j<map[i].length; j++){
+      if(map[i][j] >= 0 && map[i][j] <= 2){
+        if(maze.length === 0){
+          maze.push(_createLevel(mazeWidth, mazeHeight));
+        }
+
+        maze[0][i][j] = '' + 0;
+      }else if(map[i][j] > 2){
+        if(maze.length === 0){
+          maze.push(_createLevel(mazeWidth, mazeHeight));
+        }
+
+        maze[0][i][j] = '' + 0;
+
+        if(maze.length === 1){
+          maze.push(_createLevel(mazeWidth, mazeHeight));
+        }
+
+        maze[1][i][j] = '' + map[i][j];
+      }
+    }
+  }
+  return maze;
+};
+
+
+
+
 FroggerBot.Game = function(game) {
   this.enemyOnBoard = false;
+  this.socket = game.socket;
+  this.firstMap = game.levelMap;
 };
 
 FroggerBot.Game.prototype.init = function(){
@@ -38,6 +86,7 @@ FroggerBot.Game.prototype.create = function() {
   var me = this;
 
   //Add the players
+  console.log('my side is', this.game.playerSide);
   this.player = this.game.add.sprite(0, 0, 'bomberbot' + this.game.playerSide, 5);
   this.player.scale.set(0.55, 0.55);
 
@@ -45,6 +94,10 @@ FroggerBot.Game.prototype.create = function() {
   this.positronic = this.game.plugins.add(new Phaser.Plugin.Positronic(this.game, this));
   this.positronic.create();
   this.positronic.configure(FroggerBot.Configuration.positronicConfig);
+  this.positronic.start = function(){
+    console.log('do nothing', me.socket);
+    me.socket.emit('setProgram', me.positronic.mainProgramGroup.getProgram().split(','));
+  };
   this.calculateCenterSpace();
 
   //Add and configure the Maze2.5D plugin
@@ -80,7 +133,8 @@ FroggerBot.Game.prototype.render = function() {
 };
 
 FroggerBot.Game.prototype.configureMazePlugin = function(){
-  this.maze.setGrid(this.game.levelMap);
+  //console.log(this.game.levelMap.toString());
+  this.maze.setGrid(mapToMaze(this.game.levelMap));
 
   this.maze.setCellsProperties(config.cellTypes);
 
@@ -117,3 +171,50 @@ FroggerBot.Game.prototype.placeMaze = function(){
   me.maze.mazeLayersGroup.y = me.positronic.editorGroup.y + 20;
 };
 
+FroggerBot.Game.prototype.replaceSide = function(side){
+  //this.player = this.game.add.sprite(0, 0, 'bomberbot' + side, 5);
+};
+
+FroggerBot.Game.prototype.updateEnemy = function(enemy){
+  //this.enemy = this.game.add.sprite(0, 0, 'bomberbot' + enemy.side, 5);
+};
+
+FroggerBot.Game.prototype.manageMap = function(map){
+  //we need to analyze the map
+  //2 0 true
+  for (var j = 0; j < this.firstMap.length; j++) {
+    var row = this.firstMap[j];
+    for (var i = 0; i < row.length; i++) {
+      if(this.firstMap[j][i]!==map[j][i]){
+        console.log(map[j][i], this.firstMap[j][i], this.firstMap[j][i]!==map[j][i])
+        //something happens!
+        if(map[j][i]==0){
+          //TODO
+          console.log('clean cell');
+        }
+        if(map[j][i]&1 && !(this.firstMap[j][i]&1)){
+          //TODO
+          console.log('move player 1');
+        }
+        if(map[j][i]&2 && !(this.firstMap[j][i]&2)){
+          //TODO
+          console.log('move player 2');
+        }
+        if(map[j][i]&4 && !(this.firstMap[j][i]&4)){
+          //TODO
+          console.log('block appears?');
+          //this.maze.putCell
+        }
+        if(map[j][i]&8 && !(this.firstMap[j][i]&8)){
+          //TODO
+          console.log('mine 1 appears');
+        }
+        if(map[j][i]&16 && !(this.firstMap[j][i]&16)){
+          //TODO
+          console.log('mine 2 appears');
+        }
+      }
+    }
+  }
+  this.firstMap = map;
+};

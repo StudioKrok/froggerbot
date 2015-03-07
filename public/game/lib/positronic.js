@@ -36167,8 +36167,9 @@ module.exports = function(){
 
     configure(configurationObj);
     RunnableProgram.python = convertToPython(toJavascript.apply(null, functions));
-    RunnableProgram.JavaScript = toJavascript(functions[0], functions[1], functions[2]);
+    RunnableProgram.JavaScript = toJavascript(functions[0]);
     RunnableProgram.ecmaScript6 = applyYield(RunnableProgram.JavaScript);
+    console.log(RunnableProgram.ecmaScript6);
     RunnableProgram.indexed = addIndexInjection + applyIndex(RunnableProgram.ecmaScript6);
     RunnableProgram.regenerated = regenerator.compile(RunnableProgram.indexed).code;
     mainObj.positronic = {
@@ -41633,8 +41634,8 @@ Phaser.Plugin.Positronic.prototype.startProgram = function(){
 
   var functions = [];
   functions.push(this.mainProgramGroup.getProgram());
-  functions.push(this.function1Group.getProgram());
-  functions.push(this.function2Group.getProgram());
+  //functions.push(this.function1Group.getProgram());
+  //functions.push(this.function2Group.getProgram());
 
   //Call the function that does the magic
   this.runnableProgram = transformer.createRunnableProgram(this.configurationObj, this.configurationObj.executerName, this.configurationObj.executer, functions);

@@ -46,6 +46,7 @@ var Player = function(gameManager, socket){
     },
     setLevelMap: function(myMap){
       levelMap = myMap;
+      //console.log(levelMap.toString());
       socket.emit('setMap', levelMap);
     },
     isReady: function(){
